@@ -32,30 +32,53 @@ const functions = [
 ];
 
 const spamExamples = {
-  "comment-0090": "Get 60% of my real estate investing course when you register now at www.xyz.com!",
-  "comment-0204": "Hi, Bill. If your hen seems lethargic for that long, you may want to consult a veterinarian as it could be indicative of a serious health condition.",
+  "comment-0090":
+    "Get 60% of my real estate investing course when you register now at www.xyz.com!",
+  "comment-0204":
+    "Hi, Bill. If your hen seems lethargic for that long, you may want to consult a veterinarian as it could be indicative of a serious health condition.",
 };
 
+function isSpam(id: string) {
+  console.log(`😈 ${id} is spam! Deleting...`);
+}
+
+function isNotSpam(id: string) {
+  console.log(`😇 ${id} is OK! Saving...`);
+}
+
 async function betterSpamDetector(id: string, message: string) {
-  const PROMPT = "You are a content moderator on a message board about poultry keeping. Please mark the following comment as spam or not spam.";
   const data = `(ID: ${id}) ${message}`;
   const resp = await openai.createChatCompletion({
     temperature: 1.0,
     model: "gpt-3.5-turbo-0613",
     functions: functions,
-    // function_call: "auto",
+    function_call: "auto",
     messages: [
       {
         role: "system",
-        content: "If the user makes a comment that seems like spam call `denyComment`, otherwise call `allowComment`.",
+        content:
+          "If the user makes a comment that seems like spam call `denyComment`, otherwise call `allowComment`.",
       },
       {
         role: "user",
         content: data,
-      }
+      },
     ],
   });
-  console.log(JSON.stringify(resp.data.choices, null, 2));
+
+  resp.data.choices.map(({ message }) => {
+    if (message?.function_call) {
+      const { function_call } = message;
+      // I dislike this API....
+      const args: { id: string } = JSON.parse(function_call?.arguments || "");
+      if (function_call.name === "denyComment") {
+        return isSpam(args.id);
+      }
+      if (function_call.name === "allowComment") {
+        return isNotSpam(args.id);
+      }
+    }
+  });
 }
 
 (async () => {

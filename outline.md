@@ -1,20 +1,26 @@
 - Pre-requisites
   - OpenAI API
   - Typescript (Async, Await, basic syntax)
+  - GPT Chat completion "Roles"
+  - Training cutoff date
+  - JSON Schema: https://bjdash.github.io/JSON-Schema-Builder/
+    - Don't know JSON Schema? ChatGPT does.
+- Demonstartion: Spam detection without functions.
 - The problem
+  - Bridging natural language and computer language.
+  - _Cleanly_ interface software with LLM results.
+  - Avoid string manipulation and hacks.
 - The solution
-
-* Bridge the gap between natural language and code.
-* _Cleanly_ interface software with LLM results.
-* Avoid string manipulation and hacks.
-
+  - New GPT "function_calls"
+- What is it?
+  - You give GPT a list of functions your application has.
+  - GPT intelligently selects the correct function based on context.
 - Real-world applications
-
-* Robotics
-* Text-based interfaces
-* Giving GPT the ability to retrieve data after the training cutoff date.
-
+  - Robotics (call robot function based on incoming data)
+  - Text-based interfaces (run application feature based on English requests)
+  - Giving GPT the ability to retrieve data after the training cutoff date.
 - Caveats
-- Only works with some models: `gpt-4-0613`, `gpt-3.5-turbo-0613`
-- non-helpful 400 errors are common starting out.
-- SEE ALSO: Type Chat: https://microsoft.github.io/TypeChat/blog/introducing-typechat/
+  - Only works with some models: `gpt-4-0613`, `gpt-3.5-turbo-0613`
+  - non-helpful 400 errors are common starting out.
+- Looking forward
+  - SEE ALSO: Type Chat: https://microsoft.github.io/TypeChat/blog/introducing-typechat/
